@@ -1,8 +1,8 @@
 import Head from "next/head"
 import { useState } from "react"
 import styles from "../styles/Home.module.css"
-import MarketCard from "../component/MarketCard"
-import NftCard from "../component/NftCard"
+import MarketCard from "../components/MarketCard"
+import NftCard from "../components/NftCard"
 
 const nfts = [
     {
@@ -54,7 +54,13 @@ export default function Home() {
                 <h1>lensBook</h1>
                 <p>Decentralized NFT Books and Novels Publisher & Marketplace</p>
             </div>
-            <div className="border border-green-700 bg-green-300">
+            <div
+                className="flex border border-green-700 bg-green-300"
+                style={{
+                    background: "linear-gradient(223.57deg, #0f5f4b 11.28%, #09152f 111.42%)",
+                    boxShadow: "0px 8px 20px 0 rgba(0,0,0,0.1)",
+                }}
+            >
                 <MarketCard
                     title="Market"
                     description="Lorem ipsum dolor sit amet, adfsdf consectet adipiscing elit, asdsed do eiusmod tempor incididunt ut labore et dolore"
