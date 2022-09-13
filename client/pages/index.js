@@ -1,9 +1,9 @@
 import Head from "next/head"
 import { useState } from "react"
 import styles from "../styles/Home.module.css"
-import MarketCard from "../component/MarketCard"
-import NftCard from "../component/NftCard"
-import MainHeader from "../component/MainHeader"
+import MarketCard from "../components/MarketCard"
+import NftCard from "../components/NftCard"
+import MainHeader from "../components/MainHeader"
 
 
 const nfts = [
