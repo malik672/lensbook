@@ -3,6 +3,8 @@ import { useState } from "react"
 import styles from "../styles/Home.module.css"
 import MarketCard from "../component/MarketCard"
 import NftCard from "../component/NftCard"
+import MainHeader from "../component/MainHeader"
+
 
 const nfts = [
     {
@@ -49,35 +51,49 @@ export default function Home() {
     }
 
     return (
-        <>
-            <div className="border border-gray-700 bg-gray-500">
-                <h1>lensBook</h1>
-                <p>Decentralized NFT Books and Novels Publisher & Marketplace</p>
+        <>  {/*NAVBAR*/}
+
+
+            {/*HEADER*/}
+
+            <div className= "" >
+                <MainHeader
+                backgroundImage="https://images.pexels.com/photos/8531176/pexels-photo-8531176.jpeg"
+                />    
             </div>
-            <div className="flex border border-green-700 bg-green-300"
+
+            {/*SUBNAV*/}
+
+            <div className="flex flex-col md:flex-row justify-center place-content-center pt-10 pb-10"
                 style={{
                     background: "linear-gradient(223.57deg, #0f5f4b 11.28%, #09152f 111.42%)",
                     boxShadow: "0px 8px 20px 0 rgba(0,0,0,0.1)",
-                  }}>
+                  }}
+                  >
                 <MarketCard
                     title="Market"
                     description="Lorem ipsum dolor sit amet, adfsdf consectet adipiscing elit, asdsed do eiusmod tempor incididunt ut labore et dolore"
                     buttonName="MARKET"
-                    buttonHandler={() => {}}
+                    buttonURL="#"
+                    const buttonHandler={() => {}}
                 />
                 <MarketCard
                     title="Dashboard"
                     description="Lorem ipsum dolor sit amet, adfsdf consectet adipiscing elit, asdsed do eiusmod tempor incididunt ut labore et dolore"
                     buttonName="DASHBOARD"
-                    buttonHandler={() => {}}
+                    buttonURL="#"
+                    constbuttonHandler={() => {}}
                 />
                 <MarketCard
                     title="Publish"
                     description="Lorem ipsum dolor sit amet, adfsdf consectet adipiscing elit, asdsed do eiusmod tempor incididunt ut labore et dolore"
                     buttonName="PUBLISH"
-                    buttonHandler={() => {}}
+                    buttonURL="#"
+                    const buttonHandler={() => {}}
                 />
             </div>
+
+
             <div className="border border-blue-700 bg-blue-400">
                 <p>Minting Now</p>
                 <p>view more...</p>
