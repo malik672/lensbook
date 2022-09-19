@@ -1,6 +1,6 @@
 function MainHeader({ backgroundImage }) {
     return (
-        <div>
+        <div className="relative">
             <div className="bg-[#d9d9d9] w-full h-96 relative">
                 <img
                     src={backgroundImage}

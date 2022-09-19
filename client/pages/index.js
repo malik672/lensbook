@@ -4,7 +4,7 @@ import styles from "../styles/Home.module.css"
 import MarketCard from "../components/MarketCard"
 import NftCard from "../components/NftCard"
 import MainHeader from "../components/MainHeader"
-
+import MainNav from "../components/MainNav"
 
 const nfts = [
     {
@@ -52,11 +52,13 @@ export default function Home() {
 
     return (
         <>  {/*NAVBAR*/}
-
+            
+            <MainNav />    
+            
 
             {/*HEADER*/}
 
-            <div className= "" >
+            <div className= "position-relative" >
                 <MainHeader
                 backgroundImage="https://images.pexels.com/photos/8531176/pexels-photo-8531176.jpeg"
                 />    
