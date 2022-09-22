@@ -34,18 +34,14 @@ const Publish = () => {
     }, false)
   })
 
-  const [val, setVal] = useState("");
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
   const [modules, setModule] = useState();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
-  const [language, setLanguage] = useState("");
-  const [limit, setLimits] = useState("");
   const [tags, setTags] = useState([""]);
   const [mature, setMature] = useState(false);
-  const [category, setCategory] = useState("");
   const [file, setFile] = useState("");
   const [type, setType] = useState();
   const [key, setKey] = useState("");
@@ -133,18 +129,7 @@ const Publish = () => {
 
   const [boolf, setBoolF] = useState(false);
 
-  const currencySelect = [
-    { value: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889", text: "WMATIC" },
-    { value: "0x2058A9D7613eEE744279e3856Ef0eAda5FCbaA7e", text: "USDC" },
-    { value: "0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F", text: "DAI" },
-  ];
-
-  const [token, setToken] = useState();
-
-  const selectCurrency = (e) => {
-    setToken(e.target.value);
-    console.log(token);
-  };
+  
 
   const permission = (e) => {
     setBoolF(e.target.value);
@@ -169,11 +154,11 @@ const Publish = () => {
           key: "type",
           value: "post",
         },
-        // {
-        //   traitType: "string",
-        //   key: "data",
-        //   value: `${data}`,
-        // },
+        {
+          traitType: "string",
+          key: "data",
+          value: `${data}`,
+        },
         // {
         //   traitType: "string",
         //   key: "key",
@@ -205,48 +190,20 @@ const Publish = () => {
     console.log(receiver, token, val, id, bool);
     const postUri = await uploadToIpfs();
 
-    const freed = {
-      profileId: `${profile}`,
-      contentURI: `${postUri}`,
-      collectModule: {
-        feeCollectModule: {
-          amount: {
-            currency: `${token}`,
-            value: `${val}`,
-          },
-          recipient: `${receiver}`,
-          referralFee: 10.5,
-          followerOnly: false,
-        },
+    const free = {
+      "profileId": `${profile}`,
+      "contentURI": `${postUri}`,
+      "collectModule": {
+          "freeCollectModule":  {
+              "followerOnly": false
+           }
       },
       referenceModule: {
-        followerOnlyReferenceModule: false,
-      },
-    };
+          "followerOnlyReferenceModule": false
+      }
+   }
 
-    const frees = {
-      profileId: `${profile}`,
-      contentURI: `${postUri}`,
-      collectModule: {
-        limitedFeeCollectModule: {
-          collectLimit: `${copy}`,
-          amount: {
-            currency: `${token}`,
-            value: `${val}`,
-          },
-          recipient: `${receiver}`,
-          referralFee: 10.5,
-          followerOnly: false,
-        },
-      },
-      referenceModule: {
-        followerOnlyReferenceModule: false,
-      },
-    };
-
-    const free = copy == "" ? freed : frees
-
-    const result = await createPostTypedDatas(freed);
+    const result = await createPostTypedDatas(free);
 
     console.log(result);
     const typedData = result.data.createPostTypedData.typedData;
@@ -375,24 +332,6 @@ const Publish = () => {
                   </p>
                 </div>
               </div>
-              <div className="w-full md:w-1/2 px-3">
-                <label
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                  for="grid-last-name"
-                >
-                  Number Of Copies
-                </label>
-                <input
-                  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-green-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                  id="grid-last-name"
-                  type="text"
-                  placeholder="Number Of Copies"
-                  onChange={(e) => setCopy(e.target.value)}
-                />
-                <p class="text-gray-600 text-xs italic">
-                  if Infinite please leave empty
-                </p>
-              </div>
               <div className="w-full md:w-1/2 px-3 mt-6">
                 <label
                   className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -416,50 +355,6 @@ const Publish = () => {
                 </select>
                 <p class="text-gray-600 text-xs italic">
                   select whether only follower can review or not
-                </p>
-              </div>
-              <div className="w-full md:w-1/2 px-3 mt-6">
-                <label
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                  for="grid-last-name"
-                >
-                  select Token:
-                </label>
-                <select
-                  required
-                  value={token}
-                  onChange={selectCurrency}
-                  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="grid-last-name"
-                >
-                  {currencySelect.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.text}
-                    </option>
-                  ))}
-                </select>
-                <p class="text-gray-600 text-xs italic">
-                  select whether only follower can buy or not
-                </p>
-              </div>
-              <div className="w-full md:w-1/2 px-3 mt-6">
-                <label
-                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                  for="grid-last-name"
-                >
-                  Price
-                </label>
-                <input
-                  required
-                  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="grid-last-name"
-                  type="number"
-                  onChange={(e) => setVal(e.target.value)}
-                  placeholder="Price"
-                />
-                <p class="text-gray-600 text-xs italic">
-                  price for a copy(negative number if set, would be converted to
-                  positive)
                 </p>
               </div>
               <div className="w-full md:w-1/2 px-3 mt-6">

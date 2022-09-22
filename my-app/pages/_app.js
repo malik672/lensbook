@@ -85,6 +85,7 @@ function MyApp({ Component, pageProps }) {
       console.error(err, "can't sign in");
     }
   }
+  // signIn()
   const getSiweMessageOptions = async() => ({
     statement: "Sign in to my LensBook app",
   });

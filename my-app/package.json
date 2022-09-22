@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
+    "@lit-protocol/sdk-browser": "^1.1.226",
     "@rainbow-me/rainbowkit": "^0.5.3",
     "@rainbow-me/rainbowkit-siwe-next-auth": "^0.1.2",
     "@xmtp/xmtp-js": "^6.1.0",

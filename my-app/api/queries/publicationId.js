@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import {client} from "../../utils";
+import {client} from "../../apollo-client.js";
 
 const vee = (hash) => {
     const vee = `query MyQuery {

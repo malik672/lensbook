@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core';
-import {createClient} from "../api/api";
+import {createClient} from "./api";
 import {getAddressFromSigner, sendTx} from "./ether.service";
 
 
@@ -25,18 +25,22 @@ const getModuleApprovalData = async(moduleApprovalRequest) => {
 };
 
 export const approveModule = async(home) => {
-  const address = await getAddressFromSigner();
-  const result = await getModuleApprovalData(home);
-
-  const generateModuleCurrencyApprovalData =
-  result.data.generateModuleCurrencyApprovalData;
-
-  const tx = await sendTx({
-    to: generateModuleCurrencyApprovalData.to,
-    from: generateModuleCurrencyApprovalData.from,
-    data: generateModuleCurrencyApprovalData.data,
-  });
-
-  await tx.wait();
-  return tx;
+  try{
+    const address = await getAddressFromSigner();
+    const result = await getModuleApprovalData(home);
+  
+    const generateModuleCurrencyApprovalData =
+    result.data.generateModuleCurrencyApprovalData;
+  
+    const tx = await sendTx({
+      to: generateModuleCurrencyApprovalData.to,
+      from: generateModuleCurrencyApprovalData.from,
+      data: generateModuleCurrencyApprovalData.data,
+    });
+  
+    await tx.wait();
+    return tx;
+  }catch(e){
+    console.error(e)
+  }
 }

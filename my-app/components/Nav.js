@@ -6,7 +6,7 @@ function Nav() {
 			<Link href={"/Home"} >
 				<a className="px-26" style={{paddingLeft:"7px", paddingRight:"7px"}}>Home</a>
 			</Link>
-			<Link href={"/Publish"} >
+			<Link href={"/FreePublish"} >
 				<a className="px-16"  style={{paddingLeft:"7px", paddingRight:"7px"}}>Publish</a>
 			</Link>
 			<Link href={"/Profile"} >
