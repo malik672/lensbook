@@ -6,15 +6,13 @@ import { useState } from "react";
 import { ProfileContext } from "../components/ProfileContext";
 import { useContext } from "react";
 
-
 const Profile = () => {
   const [state, setState] = useState();
   const [pfp, setPfp] = useState();
   const [name, setName] = useState();
   const [bio, setBio] = useState();
 
-  const {profile} = useContext(ProfileContext);
- 
+  const { profile } = useContext(ProfileContext);
 
   const red = async () => {
     const { loading, error, data } = await profiles();
@@ -28,7 +26,7 @@ const Profile = () => {
   return (
     <div>
       <Header />
-      <div className="background-color: rgba(17, 24, 39, var(--tw-bg-opacity)); mb-8 transform translate-y-35.4 ...   transform translate-y-19.6 ... ">
+      <div className="background-color: rgba(17, 24, 39, var(--tw-bg-opacity)); mb-8 transform translate-y-35.4 ...   transform translate-y-19.6 ... " style={{paddingTop: "65px"}}>
         <div style={{ backgroundColor: "black" }}>
           <img
             src={state}
@@ -72,6 +70,21 @@ const Profile = () => {
             edit profile
           </a>
         </Link>
+      </div>
+      <div>
+        <div className=" flex flex-row justify-between p-5 text-white-900 rounded-full py-3 px-6 ml-8 mr-8 mb-8" style={{width: "auto", backgroundColor:"#0c3a3d"}}>
+          <div className="flex flex-row justify-between" style={{width:"100%", color:"white"}}>
+            <button className="wallet">Wallet</button>
+            <button className="published">Published</button>
+            <button className="stats">stats</button>
+            <Link href={""}>
+              <button className="messages">Messages</button>
+            </Link>
+          </div>
+          <div style={{width:"100%"}}>
+
+          </div>
+        </div>
       </div>
     </div>
   );

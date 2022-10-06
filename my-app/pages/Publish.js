@@ -19,6 +19,7 @@ import { publicationId, collectNft } from "../api/queries/publicationId";
 import { ProfileContext } from "../components/ProfileContext";
 import { useContext } from "react";
 import LitJsSdk from "@lit-protocol/sdk-browser";
+import {Lit, save, decryptString, test} from "../api/lit"
 
 const Publish = () => {
   const [id, setID] = useState("");
@@ -151,7 +152,7 @@ const Publish = () => {
   };
 
   //upload to ipfs
-  async function uploadToIpfs() {
+  async function uploadToIpfs(datas) {
     console.log(type, url);
     const metadata = {
       version: "2.0.0",
@@ -169,11 +170,11 @@ const Publish = () => {
           key: "type",
           value: "post",
         },
-        // {
-        //   traitType: "string",
-        //   key: "data",
-        //   value: `${data}`,
-        // },
+        {
+          traitType: "string",
+          key: "data",
+          value: `${datas}`,
+        },
         // {
         //   traitType: "string",
         //   key: "key",
@@ -188,7 +189,7 @@ const Publish = () => {
       ],
       locale: "en",
       createdOn: new Date(),
-      appId: "lensook",
+      appId: "lesook",
     };
 
     const added = await client.add(JSON.stringify(metadata));
@@ -201,9 +202,9 @@ const Publish = () => {
   }
 
   //result post
-  async function post() {
+  async function post(datas) {
     console.log(receiver, token, val, id, bool);
-    const postUri = await uploadToIpfs();
+    const postUri = await uploadToIpfs(datas);
 
     const freed = {
       profileId: `${profile}`,
@@ -224,27 +225,9 @@ const Publish = () => {
       },
     };
 
-    const frees = {
-      profileId: `${profile}`,
-      contentURI: `${postUri}`,
-      collectModule: {
-        limitedFeeCollectModule: {
-          collectLimit: `${copy}`,
-          amount: {
-            currency: `${token}`,
-            value: `${val}`,
-          },
-          recipient: `${receiver}`,
-          referralFee: 10.5,
-          followerOnly: false,
-        },
-      },
-      referenceModule: {
-        followerOnlyReferenceModule: false,
-      },
-    };
-
-    const free = copy == "" ? freed : frees
+  
+    const op = copy == "" ? "FeeCollectModule" : "LimitedFeeCollectModule"
+    setModule(op)
 
     const result = await createPostTypedDatas(freed);
 
@@ -278,36 +261,43 @@ const Publish = () => {
 
   const postPad = async (e) => {
     e.preventDefault();
-    // const ted = await Lit(file);
-    // setData(ted[0]);
-    // setKey(ted[1]);
+    const ted = await Lit(file);
+    setData(ted[0]);
+    setKey(ted[1]);
+    const keys = ted[1];
     document.querySelector("#form").reset();
-    const red = await post();
+    const red = await post(ted[0]);
     console.log(await red.hash);
     console.log(await index(red.hash));
     console.log("sucessful indexed");
-    const rec = {currency:token, value: val, collectModule:"FeeCollectModule"};
+    const rec = {currency:token, value: val, collectModule:modules};
     const re = await approveModule(rec);
     const pubId = await publicationId(red.hash)
-    console.log(pubId)
+    const pubs = pubId.data.publication.id
+    console.log(pubs)
     const green = pubId.data.publication.id;
     const reds = {publicationId: pubId.data.publication.id}
     const t = await collect(reds);
-    // const f = await t.wait();
-    // console.log());
-    // console.log("collected successfully");
-    // const collectsNFT = await collectNft(green);
-    // const collectAdd = collectsNFT.data.publication.collectNftAddress;
-    // const meta = collectsNFT.data.publication.metadata.attributes[2].value;
-    // await save(collectAdd, meta);
+    console.log(await t.wait())
+    console.log("collected successfully");
+    const collectsNFT = await collectNft(pubs);
+    console.log(collectsNFT.data.publication.collectNftAddress)
+    const collectAdd = collectsNFT.data.publication.collectNftAddress;
+    console.log(keys)
+    const meta = collectsNFT.data.publication.metadata.attributes[1].value;
+    const metas = await test(meta);
+    const saves = await save(collectAdd, keys);
+    console.log(meta, metas)
+    const dee = await saves;
+    console.log(saves)
   };
 
   return (
     <div>
       <Header />
       <div style={{ paddingTop: "65px" }}>
-        <h1>Publish</h1>
-        <button onClick={(e) => createPostTypedDatas()}>frr</button>
+        {/* <h1>Publish</h1>
+        <button onClick={}>frr</button> */}
       </div>
       <div className="rounded-lg shadow-md p-3">
         <form id="form" onSubmit={postPad}>
@@ -453,7 +443,7 @@ const Publish = () => {
                   required
                   class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-last-name"
-                  type="number"
+                  type="text"
                   onChange={(e) => setVal(e.target.value)}
                   placeholder="Price"
                 />

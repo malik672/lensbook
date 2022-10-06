@@ -30,7 +30,7 @@ const Card = () => {
                {a.profile.name !== null ? <p>{a.profile.name}</p> : <p>{a.profile.handle}</p>}
                <p>{a.metadata.description}</p>
                <p>{a.metadata.content}</p>
-               {a.metadata.tags.map((tag) => (
+               {a.metadata.tags.map((tag) => ( 
                  <div>
                    <p>{tag}</p>
                  </div>

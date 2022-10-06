@@ -18,14 +18,16 @@ import { collect } from "../api/collect";
 import { publicationId, collectNft } from "../api/queries/publicationId";
 import { ProfileContext } from "../components/ProfileContext";
 import { useContext } from "react";
+
 import LitJsSdk from "@lit-protocol/sdk-browser";
+import {Lit, save, decryptString, test} from "../api/lit"
 
 const Publish = () => {
   const [id, setID] = useState("");
   const [loading, setNetworkLoading] = useState("");
   const { profile } = useContext(ProfileContext);
   const grey = profile;
-  const receiver = "0x30bE4D758d86cfb1Ae74Ae698f2CF4BA7dC8d693";
+
 
   useEffect(() => {
     document.addEventListener('lit-ready', function (e) {
@@ -136,18 +138,18 @@ const Publish = () => {
   };
 
   //upload to ipfs
-  async function uploadToIpfs() {
+  async function uploadToIpfs(datas) {
     console.log(type, url);
     const metadata = {
       version: "2.0.0",
       metadata_id: uuid(),
-      description: `${description}`,
+      description: `encrypted`,
       mainContentFocus: "IMAGE",
-      content: `${description}`,
+      content: `encrypted`,
       external_url: null,
       image: `${url}`,
       imageMimeType: `${type}`,
-      name: `${title}`,
+      name: `encrypted`,
       attributes: [
         {
           traitType: "string",
@@ -155,15 +157,15 @@ const Publish = () => {
           value: "post",
         },
         {
-          traitType: "string",
+          traitType: "array",
           key: "data",
-          value: `${data}`,
+          value: `${datas}`,
         },
-        // {
-        //   traitType: "string",
-        //   key: "key",
-        //   value: `${key}`,
-        // },
+        {
+          traitType: "array",
+          key: "receiver",
+          value: `${datas}`,
+        },
       ],
       media: [
         {
@@ -173,7 +175,7 @@ const Publish = () => {
       ],
       locale: "en",
       createdOn: new Date(),
-      appId: "lensook",
+      appId: "fileCrypt",
     };
 
     const added = await client.add(JSON.stringify(metadata));
@@ -186,9 +188,9 @@ const Publish = () => {
   }
 
   //result post
-  async function post() {
-    console.log(receiver, token, val, id, bool);
-    const postUri = await uploadToIpfs();
+  async function post(datas) {
+   
+    const postUri = await uploadToIpfs(datas);
 
     const free = {
       "profileId": `${profile}`,
@@ -235,28 +237,37 @@ const Publish = () => {
 
   const postPad = async (e) => {
     e.preventDefault();
-    // const ted = await Lit(file);
-    // setData(ted[0]);
-    // setKey(ted[1]);
+    const ted = await Lit(file);
+    setData(ted[0]);
+    setKey(ted[1]);
+    const keys = ted[1];
     document.querySelector("#form").reset();
-    const red = await post();
+    const red = await post(ted[0]);
     console.log(await red.hash);
     console.log(await index(red.hash));
     console.log("sucessful indexed");
-    const rec = {currency:token, value: val, collectModule:"FeeCollectModule"};
-    const re = await approveModule(rec);
     const pubId = await publicationId(red.hash)
-    console.log(pubId)
+    const pubs = pubId.data.publication.id
+    console.log(pubs)
     const green = pubId.data.publication.id;
     const reds = {publicationId: pubId.data.publication.id}
     const t = await collect(reds);
-    // const f = await t.wait();
-    // console.log());
-    // console.log("collected successfully");
-    // const collectsNFT = await collectNft(green);
-    // const collectAdd = collectsNFT.data.publication.collectNftAddress;
-    // const meta = collectsNFT.data.publication.metadata.attributes[2].value;
-    // await save(collectAdd, meta);
+    console.log(await t.wait())
+    console.log("collected successfully");
+    const collectsNFT = await collectNft(pubs);
+    console.log(collectsNFT.data.publication.collectNftAddress)
+    const collectAdd = collectsNFT.data.publication.collectNftAddress;
+    console.log(keys)
+    const meta = collectsNFT.data.publication.metadata.attributes[1].value;
+    const metas = await test(meta);
+    const saves = await save(collectAdd, keys);
+    console.log(meta, metas)
+    const dee = await saves;
+    console.log(saves)
+  //  const refd =  await decryptString(collectAdd, dee, metas)
+  //  const added = await client.add(refd);
+  //  const uri = `https://lenspads.infura-ipfs.io/ipfs/${added.path}`;
+  //  console.log(uri)
   };
 
   return (
@@ -264,7 +275,7 @@ const Publish = () => {
       <Header />
       <div style={{ paddingTop: "65px" }}>
         <h1>Publish</h1>
-        <button onClick={(e) => createPostTypedDatas()}>frr</button>
+        <button onClick={(e) => test()}>frr</button>
       </div>
       <div className="rounded-lg shadow-md p-3">
         <form id="form" onSubmit={postPad}>

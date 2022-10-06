@@ -1,22 +1,30 @@
-import LitJsSdk from "@lit-protocol/sdk-browser";
-import { client as auth } from "./auth";
+import LitJsSdk from "lit-js-sdk";
+import { client as ipfs } from "./auth";
 
-export const Lit = async (strings) => {
+export const Lit = async (file, contractAddress, pubId) => {
+  const chain = "mumbai";
   const win = typeof window !== "undefined" ? window : "";
   const client = new LitJsSdk.LitNodeClient();
   await client.connect();
   win.litNodeClient = client;
 
-  const { encryptedString, symmetricKey } = LitJsSdk.encryptString(strings);
+  const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(file);
+  // const addeds = await ipfs.add(encryptedString);
+  // const uris = `https://lenspads.infura-ipfs.io/ipfs/${added.path}`;
   const str = await LitJsSdk.blobToBase64String(encryptedString);
   const key = await LitJsSdk.uint8arrayToString(symmetricKey, "base16");
-  const string = [str, key];
+  const added = await ipfs.add(encryptedString);
+  const uri = `https://lenspads.infura-ipfs.io/ipfs/${added.path}`;
+  console.log(uri)
+  const string = [uri, symmetricKey];
   return string;
 };
 
-const save = async (contractAddress, key) => {
+export const save = async (contractAddress,  symmetricKey) => {
+  const chain = "mumbai";
+  const win = typeof window !== "undefined" ? window : "";
   const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain: "mumbai" });
-  const conditions = [
+  const accessControlConditions = [
     {
       conditionType: "evmBasic",
       contractAddress: `${contractAddress}`,
@@ -30,10 +38,10 @@ const save = async (contractAddress, key) => {
       },
     },
   ];
-
+  
   const encryptedSymmetricKey = await win.litNodeClient.saveEncryptionKey({
-    accessControlConditions: conditions,
-    tear,
+    accessControlConditions,
+    symmetricKey,
     authSig,
     chain,
   });
@@ -41,8 +49,10 @@ const save = async (contractAddress, key) => {
   return encryptedSymmetricKey;
 };
 
-const decryptString = async (contractAddress, key, file) => {
-  const conditions = [
+export const decryptString = async (contractAddress, SymmetricKey, file) => {
+  const chain = "mumbai";
+  const wins = typeof window !== "undefined" ? window : "";
+  const accessControlConditions = [
     {
       conditionType: "evmBasic",
       contractAddress: `${contractAddress}`,
@@ -57,17 +67,26 @@ const decryptString = async (contractAddress, key, file) => {
     },
   ];
 
-  const fer = await LitJsSdk.base64StringToBlob(file);
+ 
   const authSig = await LitJsSdk.checkAndSignAuthMessage({ chain: "mumbai" });
+  const encryptedSymmetricKey = await LitJsSdk.uint8arrayToString(SymmetricKey, "base16");
 
-  const sKey = await wins.LitNodeClient.getEncryptionKey({
+  const sKey = await wins.litNodeClient.getEncryptionKey({
     accessControlConditions,
-    toDecrypt: key,
+    toDecrypt: encryptedSymmetricKey,
     chain,
     authSig,
   });
-
-  const decryptString = await LitJsSdk.decryptString(fer, sKey);
-  const fers = await LitJsSdk.base64StringToBlob(decryptString);
-  return fers;
+  
+ 
+  const decryptString = await LitJsSdk.decryptString((file), sKey);
+  const fers = decryptString;
+  const ves = await LitJsSdk.base64StringToBlob(fers)
+  return ves;
 };
+
+export const test = async(e) => {
+ const red = await fetch(e)
+ const data  = await red.blob();
+ return data;
+}
