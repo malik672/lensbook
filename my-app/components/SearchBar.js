@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {search as searchs, cSearch} from "/home/malik/Desktop/lensbooks/my-app/api/queries/search.js";
+import {search as searchs, cSearch} from "../api/queries/search.js";
 
 export default function searchBar({color}) {
    const [state, setState] = useState();
