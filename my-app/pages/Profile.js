@@ -1,5 +1,6 @@
 import React from "react";
 import { profiles } from "/home/malik/Desktop/lensbooks/my-app/api/queries/profile";
+import {userPublication} from  "/home/malik/Desktop/lensbooks/my-app/api/queries/userPublication";
 import Header from "../components/Header";
 import Link from "next/link";
 import { useState } from "react";
@@ -23,6 +24,7 @@ const Profile = () => {
     }
   };
   red();
+
   return (
     <div>
       <Header />
@@ -72,7 +74,7 @@ const Profile = () => {
         </Link>
       </div>
       <div>
-        <div className=" flex flex-row justify-between p-5 text-white-900 rounded-full py-3 px-6 ml-8 mr-8 mb-8" style={{width: "auto", backgroundColor:"#0c3a3d"}}>
+        <div className=" flex-row justify-between p-5 text-white-900 rounded-full py-3 px-6 ml-8 mr-8 mb-8" style={{width: "auto", backgroundColor:"#0c3a3d"}}>
           <div className="flex flex-row justify-between" style={{width:"100%", color:"white"}}>
             <button className="wallet">Wallet</button>
             <button className="published">Published</button>
@@ -81,9 +83,9 @@ const Profile = () => {
               <button className="messages">Messages</button>
             </Link>
           </div>
-          <div style={{width:"100%"}}>
-
-          </div>
+        </div>
+        <div className="screen pr-10 pl-10">
+           ff
         </div>
       </div>
     </div>
