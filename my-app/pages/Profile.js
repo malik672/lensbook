@@ -1,9 +1,13 @@
 import React from "react";
 import { profiles } from "/home/malik/Desktop/lensbooks/my-app/api/queries/profile";
-import {userPublication} from  "/home/malik/Desktop/lensbooks/my-app/api/queries/userPublication";
+import {
+  userPublication,
+  userPublished,
+  stats,
+} from "/home/malik/Desktop/lensbooks/my-app/api/queries/userPublication";
 import Header from "../components/Header";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProfileContext } from "../components/ProfileContext";
 import { useContext } from "react";
 
@@ -12,10 +16,11 @@ const Profile = () => {
   const [pfp, setPfp] = useState();
   const [name, setName] = useState();
   const [bio, setBio] = useState();
+  const [pub, setPub] = useState([]);
 
   const { profile } = useContext(ProfileContext);
 
-  const red = async () => {
+  const userPROFILE = async () => {
     const { loading, error, data } = await profiles();
     if (loading !== true) {
       setState(data.profile.coverPicture.original.url);
@@ -23,12 +28,31 @@ const Profile = () => {
       setBio(data.profile.bio);
     }
   };
-  red();
+  userPROFILE();
+
+  useEffect(() => {
+    const userPUBLICATION = async () => {
+      const { loading, error, data } = await userPublication(
+        "0x4302",
+        "0x30bE4D758d86cfb1Ae74Ae698f2CF4BA7dC8d693"
+      );
+      if (loading !== true) {
+        setPub(data.publications.items);
+      }
+    };
+    userPUBLICATION();
+  }, [pub]);
+
+  const wallet = async () => {};
+  wallet();
 
   return (
     <div>
       <Header />
-      <div className="background-color: rgba(17, 24, 39, var(--tw-bg-opacity)); mb-8 transform translate-y-35.4 ...   transform translate-y-19.6 ... " style={{paddingTop: "65px"}}>
+      <div
+        className="background-color: rgba(17, 24, 39, var(--tw-bg-opacity)); mb-8 transform translate-y-35.4 ...   transform translate-y-19.6 ... "
+        style={{ paddingTop: "65px" }}
+      >
         <div style={{ backgroundColor: "black" }}>
           <img
             src={state}
@@ -74,9 +98,17 @@ const Profile = () => {
         </Link>
       </div>
       <div>
-        <div className=" flex-row justify-between p-5 text-white-900 rounded-full py-3 px-6 ml-8 mr-8 mb-8" style={{width: "auto", backgroundColor:"#0c3a3d"}}>
-          <div className="flex flex-row justify-between" style={{width:"100%", color:"white"}}>
-            <button className="wallet">Wallet</button>
+        <div
+          className=" flex-row justify-between p-5 text-white-900 rounded-full py-3 px-6 ml-8 mr-8 mb-8"
+          style={{ width: "auto", backgroundColor: "#0c3a3d" }}
+        >
+          <div
+            className="flex flex-row justify-between"
+            style={{ width: "100%", color: "white" }}
+          >
+            <button className="wallet" onClick={(e) => wallet(e)}>
+              Wallet
+            </button>
             <button className="published">Published</button>
             <button className="stats">stats</button>
             <Link href={""}>
@@ -85,7 +117,9 @@ const Profile = () => {
           </div>
         </div>
         <div className="screen pr-10 pl-10">
-           ff
+          {pub.map((a) => (
+            <p>{a.metadata.image}</p>
+          ))}
         </div>
       </div>
     </div>
