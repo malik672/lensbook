@@ -117,9 +117,13 @@ const Profile = () => {
           </div>
         </div>
         <div className="screen pr-10 pl-10">
-          {pub.map((a) => (
-            <p>{a.metadata.image}</p>
-          ))}
+          <div className="screen-1">
+            {pub.map((a) => (
+              <p>{a.metadata.image}</p>
+            ))}
+          </div>
+          <div className="screen-2"></div>
+          <div className="screen-2"></div>
         </div>
       </div>
     </div>
