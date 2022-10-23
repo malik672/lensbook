@@ -17,6 +17,7 @@ const Profile = () => {
   const [name, setName] = useState();
   const [bio, setBio] = useState();
   const [pub, setPub] = useState([]);
+  const [pubs, setPubs] = useState([]);
 
   const { profile } = useContext(ProfileContext);
 
@@ -41,7 +42,16 @@ const Profile = () => {
       }
     };
     userPUBLICATION();
-  }, [pub]);
+
+    const userPUBLISHED = async () => {
+      const {loading, error, data} = await userPublished("0x4302");
+      if (loading !== true){
+        setPubs(data.publications.items)
+      }
+    }
+
+    userPUBLISHED();
+  }, [pub, pubs]);
 
   const wallet = async () => {};
   wallet();
@@ -119,11 +129,15 @@ const Profile = () => {
         <div className="screen pr-10 pl-10">
           <div className="screen-1">
             {pub.map((a) => (
-              <p>{a.metadata.image}</p>
+
+              <div className="w-40">
+                <img src={("https://lenspads.infura-ipfs.io/ipfs/"+(a.metadata.image).slice(7))}/>
+                <p className="text-center">{a.metadata.name}</p>
+              </div>
             ))}
           </div>
           <div className="screen-2"></div>
-          <div className="screen-2"></div>
+          <div className="screen-3"></div>
         </div>
       </div>
     </div>
