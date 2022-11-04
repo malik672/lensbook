@@ -93,7 +93,7 @@ function MyApp({ Component, pageProps }) {
   const { chains, provider } = configureChains(
     [chain.polygonMumbai],
     [
-      alchemyProvider({ apiKey: "f72IDQikavapQ0ro6kEq-zATKL-2L5hp" }),
+      alchemyProvider({ apiKey: //your api key }),
       publicProvider(),
     ]
   );
